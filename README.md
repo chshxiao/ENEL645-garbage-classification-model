@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This machine learning model aims to determine the kind of the garbage. Garbages can be divided into four groups: **Green**, **Black**, **Blue**, **TTR**.
+This machine learning model aims to determine the kind of the garbage. Garbages can be divided into four groups: **Green**, **Black**, **Blue**, and **TTR**.
 
 User will provide a picture of the garbage and a short natural language description on it to the model to predict the result.
 
