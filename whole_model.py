@@ -76,6 +76,31 @@ class EntireGarbageModel():
     print("logistic regression classifier accuracy:", accuracy)
 
 
+def entire_model_predict(regression_model, image_model, img_test_loader, text_model, text_test_loader, device):
+
+  # testing loop
+  test_correct = 0
+  labels_test = []
+  predict_test = []
+
+  # get labels and predictions from both models
+  img_labels, img_predict = image_model_get_probability(image_model, img_test_loader, device)
+  text_labels, text_predict = text_model_get_probability(text_model, text_test_loader, device)
+
+  with torch.no_grad():
+    # Stack the probabilities from both models to create meta-classifier features
+    inputs = np.concatenate([img_predict, text_predict], axis=1)
+    labels = img_labels
+
+    # predict from logistic regression model
+    outputs = regression_model.logistic_regression_model.predict(inputs)
+
+  print(labels)
+  print(outputs)
+  return labels, outputs
+
+
+
 """
 Get prediction from the image model or the text model
 Results are labels and probabilities of each object in numpy array n * 4

@@ -75,3 +75,24 @@ criterion = nn.CrossEntropyLoss(weight=class_weights)
 
 ### Image Model Selection
 We used ResNet50 initially. However, the validation accuracy improves from 30% at the first epoch to 45% after several epochs of training. The validation loss shows the same trendline as it decreases and stops at around 1.5 after several epochs of training. We believe this is due to the reason that ResNet50 doesn't get the features from the images. So we replaced it with VGG16 and the accuracy improved to 65% and the loss decreased to 0.8.
+
+The transfer learning process of image model consists of two parts. In the first part, all the weights are frozen except the dense layer created. The learning rate is set to be 0.001. This process is to fastly optimized the weights in the last layer as all the weights in the backbone are pretrained.
+
+The second part is the fine tune. This is done by unfreezing all parameters. However, the learning rate is set to 1e-6. This is done by setting a finetune flag in the image model class.
+``` 
+def FineTune(self, what:FineTuneType):
+  # only update the fc layer
+  if what is FineTuneType.CLASSIFIER:
+    # freeze all parameters
+    for param in self.pretrained_model.parameters():
+      param.requires_grad = False
+      
+    # unfreeze fc layer parameters
+    for param in self.classifier.parameters():
+      param.requires_grad = True
+
+  # update the whole structure (finetune)
+  else:
+    for param in self.pretrained_model.parameters():
+      param.requires_grad = True
+```
